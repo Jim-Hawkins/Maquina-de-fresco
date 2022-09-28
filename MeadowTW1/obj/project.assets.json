@@ -1,0 +1,300 @@
+{
+  "version": 3,
+  "targets": {
+    ".NETStandard,Version=v2.1": {
+      "Meadow/0.31.1": {
+        "type": "package",
+        "dependencies": {
+          "Meadow.Contracts": "0.31.1",
+          "Meadow.Units": "0.31.1"
+        },
+        "compile": {
+          "lib/netstandard2.1/Meadow.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/Meadow.dll": {}
+        }
+      },
+      "Meadow.Contracts/0.31.1": {
+        "type": "package",
+        "dependencies": {
+          "Meadow.Units": "0.31.1"
+        },
+        "compile": {
+          "lib/netstandard2.1/Meadow.Contracts.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/Meadow.Contracts.dll": {}
+        }
+      },
+      "Meadow.F7/0.31.1": {
+        "type": "package",
+        "dependencies": {
+          "Meadow": "0.31.1"
+        },
+        "compile": {
+          "lib/netstandard2.1/Meadow.F7.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/Meadow.F7.dll": {}
+        }
+      },
+      "Meadow.Foundation/0.33.1": {
+        "type": "package",
+        "dependencies": {
+          "Meadow": "0.31.1"
+        },
+        "compile": {
+          "lib/netstandard2.1/Meadow.Foundation.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/Meadow.Foundation.dll": {}
+        }
+      },
+      "Meadow.Foundation.Displays.MicroGraphics/0.9.54": {
+        "type": "package",
+        "dependencies": {
+          "Meadow.Foundation": "0.33.1"
+        },
+        "compile": {
+          "lib/netstandard2.1/MicroGraphics.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/MicroGraphics.dll": {}
+        }
+      },
+      "Meadow.Foundation.Displays.TftSpi/0.7.58": {
+        "type": "package",
+        "dependencies": {
+          "Meadow.Foundation": "0.33.1",
+          "Meadow.Foundation.Displays.MicroGraphics": "0.9.54"
+        },
+        "compile": {
+          "lib/netstandard2.1/TftSpi.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/TftSpi.dll": {}
+        }
+      },
+      "Meadow.Foundation.Sensors.Location.Gnss.NmeaProcessor/0.1.47": {
+        "type": "package",
+        "dependencies": {
+          "Meadow.Foundation": "0.33.1"
+        },
+        "compile": {
+          "lib/netstandard2.1/NmeaProcessor.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/NmeaProcessor.dll": {}
+        }
+      },
+      "Meadow.Units/0.31.1": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.1/Meadow.Units.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/Meadow.Units.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Meadow/0.31.1": {
+      "sha512": "gBcoAqrIn1J8II/AF4vxog/vPWL3LMyhLQzx/+fgS7CT7zTvX7iszVQQ4c7d7+H+qDEWp2XF0oXMHC9CKF4D+w==",
+      "type": "package",
+      "path": "meadow/0.31.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard2.1/Meadow.dll",
+        "lib/netstandard2.1/Meadow.xml",
+        "meadow.0.31.1.nupkg.sha512",
+        "meadow.nuspec"
+      ]
+    },
+    "Meadow.Contracts/0.31.1": {
+      "sha512": "Us9ww05sq29f42yBVe66v2f7BLNgwCMcHnX0odFv85iEFRtBP9vvNk2IqvAdwDYYEztdv44KayHJ8IRMglq3+w==",
+      "type": "package",
+      "path": "meadow.contracts/0.31.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard2.1/Meadow.Contracts.dll",
+        "lib/netstandard2.1/Meadow.Contracts.xml",
+        "meadow.contracts.0.31.1.nupkg.sha512",
+        "meadow.contracts.nuspec"
+      ]
+    },
+    "Meadow.F7/0.31.1": {
+      "sha512": "vTRrwC+SgdPxePRgv2qqVNcsKpcIT6OQP3ZDjMAuMB+cDAHHDAv4Q7osR7Wjfb9wDts1Ly60pKMFtvDS8HH5Zw==",
+      "type": "package",
+      "path": "meadow.f7/0.31.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard2.1/Meadow.F7.dll",
+        "lib/netstandard2.1/Meadow.F7.xml",
+        "meadow.f7.0.31.1.nupkg.sha512",
+        "meadow.f7.nuspec"
+      ]
+    },
+    "Meadow.Foundation/0.33.1": {
+      "sha512": "tl4ikgKLQ2uuRrO30AfTmWtEtWU+GuZYhACSET9eEu4rnkCY/5tKn07BDmMTRIfL5TH8JEkDXZxVkvWw1VS6iQ==",
+      "type": "package",
+      "path": "meadow.foundation/0.33.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "icon.png",
+        "lib/netstandard2.1/Meadow.Foundation.dll",
+        "lib/netstandard2.1/Meadow.Foundation.xml",
+        "meadow.foundation.0.33.1.nupkg.sha512",
+        "meadow.foundation.nuspec"
+      ]
+    },
+    "Meadow.Foundation.Displays.MicroGraphics/0.9.54": {
+      "sha512": "QCW76GHKSSNe4I7zeoWeL9fSNaNYPk20VraykkPyoLHL08fUX3iKRYqlxQqMrTNCQKczuzEuUGdcFUrRHkk36Q==",
+      "type": "package",
+      "path": "meadow.foundation.displays.micrographics/0.9.54",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "icon.png",
+        "lib/netstandard2.1/MicroGraphics.dll",
+        "lib/netstandard2.1/MicroGraphics.xml",
+        "meadow.foundation.displays.micrographics.0.9.54.nupkg.sha512",
+        "meadow.foundation.displays.micrographics.nuspec"
+      ]
+    },
+    "Meadow.Foundation.Displays.TftSpi/0.7.58": {
+      "sha512": "utClMHNObqNhpnrJVT3Ncyb8wMrIUpsbUjZXUvVPv8b0kCA0xhShVKA5ophG2aJpTgVhOeSnM7uvm+ZBl7a0Ig==",
+      "type": "package",
+      "path": "meadow.foundation.displays.tftspi/0.7.58",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "icon.png",
+        "lib/netstandard2.1/TftSpi.dll",
+        "lib/netstandard2.1/TftSpi.xml",
+        "meadow.foundation.displays.tftspi.0.7.58.nupkg.sha512",
+        "meadow.foundation.displays.tftspi.nuspec"
+      ]
+    },
+    "Meadow.Foundation.Sensors.Location.Gnss.NmeaProcessor/0.1.47": {
+      "sha512": "L32H+ahqFlbRwz7Om+GtWr3mm8oA7B6G4BzpcHxnVjs716b8EHQYzpf0nLxsg0GUxYA2EunN6Bjruz5/maohUA==",
+      "type": "package",
+      "path": "meadow.foundation.sensors.location.gnss.nmeaprocessor/0.1.47",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "icon.png",
+        "lib/netstandard2.1/NmeaProcessor.dll",
+        "lib/netstandard2.1/NmeaProcessor.xml",
+        "meadow.foundation.sensors.location.gnss.nmeaprocessor.0.1.47.nupkg.sha512",
+        "meadow.foundation.sensors.location.gnss.nmeaprocessor.nuspec"
+      ]
+    },
+    "Meadow.Units/0.31.1": {
+      "sha512": "hbbro9PXcRpXBOAtz11nNQNLFWgI8eRbdfxFJXL9J+0kQ8wqAIZcy/kgfLb5BKezNB7CsmfaJLFgy69rypYqrg==",
+      "type": "package",
+      "path": "meadow.units/0.31.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard2.1/Meadow.Units.dll",
+        "lib/netstandard2.1/Meadow.Units.xml",
+        "meadow.units.0.31.1.nupkg.sha512",
+        "meadow.units.nuspec"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    ".NETStandard,Version=v2.1": [
+      "Meadow.F7 >= 0.*",
+      "Meadow.Foundation >= 0.*",
+      "Meadow.Foundation.Displays.TftSpi >= 0.7.58",
+      "Meadow.Foundation.Sensors.Location.Gnss.NmeaProcessor >= 0.1.47"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\sergi\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "C:\\Users\\sergi\\repos\\Maquina-de-fresco\\MeadowTW1\\MeadowTW1.csproj",
+      "projectName": "App",
+      "projectPath": "C:\\Users\\sergi\\repos\\Maquina-de-fresco\\MeadowTW1\\MeadowTW1.csproj",
+      "packagesPath": "C:\\Users\\sergi\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\sergi\\repos\\Maquina-de-fresco\\MeadowTW1\\obj\\",
+      "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
+      ],
+      "configFilePaths": [
+        "C:\\Users\\sergi\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "netstandard2.1"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "targetAlias": "netstandard2.1",
+          "projectReferences": {}
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "netstandard2.1": {
+        "targetAlias": "netstandard2.1",
+        "dependencies": {
+          "Meadow.F7": {
+            "target": "Package",
+            "version": "[0.*, )"
+          },
+          "Meadow.Foundation": {
+            "target": "Package",
+            "version": "[0.*, )"
+          },
+          "Meadow.Foundation.Displays.TftSpi": {
+            "target": "Package",
+            "version": "[0.7.58, )"
+          },
+          "Meadow.Foundation.Sensors.Location.Gnss.NmeaProcessor": {
+            "target": "Package",
+            "version": "[0.1.47, )"
+          }
+        },
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "NETStandard.Library": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.412\\RuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}
