@@ -1,0 +1,187 @@
+{
+  "runtimeTarget": {
+    "name": ".NETStandard,Version=v2.1/",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETStandard,Version=v2.1": {},
+    ".NETStandard,Version=v2.1/": {
+      "App/1.0.0": {
+        "dependencies": {
+          "Meadow.F7": "0.31.1",
+          "Meadow.Foundation": "0.33.1",
+          "Meadow.Foundation.Displays.TftSpi": "0.7.58",
+          "Meadow.Foundation.Sensors.Location.Gnss.NmeaProcessor": "0.1.47",
+          "NETDuinoWar": "1.0.0.0"
+        },
+        "runtime": {
+          "App.dll": {}
+        }
+      },
+      "Meadow/0.31.1": {
+        "dependencies": {
+          "Meadow.Contracts": "0.31.1",
+          "Meadow.Units": "0.31.1"
+        },
+        "runtime": {
+          "lib/netstandard2.1/Meadow.dll": {
+            "assemblyVersion": "0.31.1.0",
+            "fileVersion": "0.31.1.0"
+          }
+        }
+      },
+      "Meadow.Contracts/0.31.1": {
+        "dependencies": {
+          "Meadow.Units": "0.31.1"
+        },
+        "runtime": {
+          "lib/netstandard2.1/Meadow.Contracts.dll": {
+            "assemblyVersion": "0.31.1.0",
+            "fileVersion": "0.31.1.0"
+          }
+        }
+      },
+      "Meadow.F7/0.31.1": {
+        "dependencies": {
+          "Meadow": "0.31.1"
+        },
+        "runtime": {
+          "lib/netstandard2.1/Meadow.F7.dll": {
+            "assemblyVersion": "0.31.1.0",
+            "fileVersion": "0.31.1.0"
+          }
+        }
+      },
+      "Meadow.Foundation/0.33.1": {
+        "dependencies": {
+          "Meadow": "0.31.1"
+        },
+        "runtime": {
+          "lib/netstandard2.1/Meadow.Foundation.dll": {
+            "assemblyVersion": "0.33.1.0",
+            "fileVersion": "0.33.1.0"
+          }
+        }
+      },
+      "Meadow.Foundation.Displays.MicroGraphics/0.9.54": {
+        "dependencies": {
+          "Meadow.Foundation": "0.33.1"
+        },
+        "runtime": {
+          "lib/netstandard2.1/MicroGraphics.dll": {
+            "assemblyVersion": "0.9.54.0",
+            "fileVersion": "0.9.54.0"
+          }
+        }
+      },
+      "Meadow.Foundation.Displays.TftSpi/0.7.58": {
+        "dependencies": {
+          "Meadow.Foundation": "0.33.1",
+          "Meadow.Foundation.Displays.MicroGraphics": "0.9.54"
+        },
+        "runtime": {
+          "lib/netstandard2.1/TftSpi.dll": {
+            "assemblyVersion": "0.7.58.0",
+            "fileVersion": "0.7.58.0"
+          }
+        }
+      },
+      "Meadow.Foundation.Sensors.Location.Gnss.NmeaProcessor/0.1.47": {
+        "dependencies": {
+          "Meadow.Foundation": "0.33.1"
+        },
+        "runtime": {
+          "lib/netstandard2.1/NmeaProcessor.dll": {
+            "assemblyVersion": "0.1.47.0",
+            "fileVersion": "0.1.47.0"
+          }
+        }
+      },
+      "Meadow.Units/0.31.1": {
+        "runtime": {
+          "lib/netstandard2.1/Meadow.Units.dll": {
+            "assemblyVersion": "0.31.1.0",
+            "fileVersion": "0.31.1.0"
+          }
+        }
+      },
+      "NETDuinoWar/1.0.0.0": {
+        "runtime": {
+          "NETDuinoWar.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "App/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Meadow/0.31.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-gBcoAqrIn1J8II/AF4vxog/vPWL3LMyhLQzx/+fgS7CT7zTvX7iszVQQ4c7d7+H+qDEWp2XF0oXMHC9CKF4D+w==",
+      "path": "meadow/0.31.1",
+      "hashPath": "meadow.0.31.1.nupkg.sha512"
+    },
+    "Meadow.Contracts/0.31.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Us9ww05sq29f42yBVe66v2f7BLNgwCMcHnX0odFv85iEFRtBP9vvNk2IqvAdwDYYEztdv44KayHJ8IRMglq3+w==",
+      "path": "meadow.contracts/0.31.1",
+      "hashPath": "meadow.contracts.0.31.1.nupkg.sha512"
+    },
+    "Meadow.F7/0.31.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-vTRrwC+SgdPxePRgv2qqVNcsKpcIT6OQP3ZDjMAuMB+cDAHHDAv4Q7osR7Wjfb9wDts1Ly60pKMFtvDS8HH5Zw==",
+      "path": "meadow.f7/0.31.1",
+      "hashPath": "meadow.f7.0.31.1.nupkg.sha512"
+    },
+    "Meadow.Foundation/0.33.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-tl4ikgKLQ2uuRrO30AfTmWtEtWU+GuZYhACSET9eEu4rnkCY/5tKn07BDmMTRIfL5TH8JEkDXZxVkvWw1VS6iQ==",
+      "path": "meadow.foundation/0.33.1",
+      "hashPath": "meadow.foundation.0.33.1.nupkg.sha512"
+    },
+    "Meadow.Foundation.Displays.MicroGraphics/0.9.54": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-QCW76GHKSSNe4I7zeoWeL9fSNaNYPk20VraykkPyoLHL08fUX3iKRYqlxQqMrTNCQKczuzEuUGdcFUrRHkk36Q==",
+      "path": "meadow.foundation.displays.micrographics/0.9.54",
+      "hashPath": "meadow.foundation.displays.micrographics.0.9.54.nupkg.sha512"
+    },
+    "Meadow.Foundation.Displays.TftSpi/0.7.58": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-utClMHNObqNhpnrJVT3Ncyb8wMrIUpsbUjZXUvVPv8b0kCA0xhShVKA5ophG2aJpTgVhOeSnM7uvm+ZBl7a0Ig==",
+      "path": "meadow.foundation.displays.tftspi/0.7.58",
+      "hashPath": "meadow.foundation.displays.tftspi.0.7.58.nupkg.sha512"
+    },
+    "Meadow.Foundation.Sensors.Location.Gnss.NmeaProcessor/0.1.47": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-L32H+ahqFlbRwz7Om+GtWr3mm8oA7B6G4BzpcHxnVjs716b8EHQYzpf0nLxsg0GUxYA2EunN6Bjruz5/maohUA==",
+      "path": "meadow.foundation.sensors.location.gnss.nmeaprocessor/0.1.47",
+      "hashPath": "meadow.foundation.sensors.location.gnss.nmeaprocessor.0.1.47.nupkg.sha512"
+    },
+    "Meadow.Units/0.31.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-hbbro9PXcRpXBOAtz11nNQNLFWgI8eRbdfxFJXL9J+0kQ8wqAIZcy/kgfLb5BKezNB7CsmfaJLFgy69rypYqrg==",
+      "path": "meadow.units/0.31.1",
+      "hashPath": "meadow.units.0.31.1.nupkg.sha512"
+    },
+    "NETDuinoWar/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
