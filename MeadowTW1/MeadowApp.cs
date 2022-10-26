@@ -43,13 +43,19 @@ namespace MeadowTW1 {
             Console.WriteLine("Initialize hardware...");
 
             //Connected Evenet Test.
-            /*Device.WiFiAdapter.WiFiConnected += WiFiAdapter_ConnectionCompleted;
+            Device.WiFiAdapter.WiFiConnected += WiFiAdapter_ConnectionCompleted;
 
             //WiFi Channel
-            WifiNetwork wifiNetwork = ScanForAccessPoints(Secrets.WIFI_NAME);
+            Console.WriteLine("Enter WIFI SSID");
+            string SSID = Console.ReadLine();
+            WifiNetwork wifiNetwork = ScanForAccessPoints(SSID);
+            //WifiNetwork wifiNetwork = ScanForAccessPoints(Secrets.WIFI_NAME);
+            Console.WriteLine("Enter WIFI password");
+            string pwd = Console.ReadLine();
 
             Device.WiFiAdapter.WiFiConnected += WiFiAdapter_WiFiConnected;
-            Device.WiFiAdapter.Connect(wifiNetwork.Ssid, Secrets.WIFI_PASSWORD);
+            //Device.WiFiAdapter.Connect(wifiNetwork.Ssid, Secrets.WIFI_PASSWORD);
+            Device.WiFiAdapter.Connect(wifiNetwork.Ssid, pwd);
 
             string IPAddress = Device.WiFiAdapter.IpAddress.ToString();
             //Connnect to the WiFi network.
@@ -62,7 +68,7 @@ namespace MeadowTW1 {
                     webServer.CommandReceived += WebServer_CommandReceived;
                     webServer.Start();
                 }
-            }*/
+            }
 
             //Temperature Sensor Configuration
             sensor = new AnalogTemperature(device: Device, analogPin: Device.Pins.A01, sensorType: AnalogTemperature.KnownSensorType.TMP36);
