@@ -60,7 +60,8 @@ namespace NewCode.Web {
             Console.WriteLine($"The url of the webserver is {Url}");
 
             // Handle requests
-            while (_runServer) {
+            while (_runServer)
+            {
                 await HandleIncomingConnections();
             }
 
@@ -95,7 +96,6 @@ namespace NewCode.Web {
                     Console.WriteLine(req.UserAgent);
                     Console.WriteLine();
 
-
                     // If `shutdown` url requested w/ POST, then shutdown the server after serving the page
                     if (req.HttpMethod == "POST" && req.Url.AbsolutePath == "/shutdown") {
                         Console.WriteLine("Shutdown requested");
@@ -117,10 +117,10 @@ namespace NewCode.Web {
                                 if (parameters?.Length >= 2) {
 
                                     // Param 5 => to pass
-                                    /*string[] pass_parts = parameters[5].Split('=');
+                                    string[] pass_parts = parameters[5].Split('=');
                                     string pass_temp = pass_parts[1];
 
-                                    if (string.Equals(pass, pass_temp)) {*/
+                                    if (string.Equals(pass, pass_temp)) {
 
                                         // Param 0 => Temp max
                                         string[] temp_max_parts = parameters[0].Split('=');
@@ -160,10 +160,10 @@ namespace NewCode.Web {
                                             message = "Los par&aacute;metros se han cambiado satisfactoriamente. Todo preparado.";
                                             ready = true;
                                         }
-                                    /*}
+                                    }
                                     else {
                                         message = "La contrase&ntilde;a es incorrecta.";
-                                    }*/
+                                    }
                                 }
                             }
                         }
@@ -203,34 +203,33 @@ namespace NewCode.Web {
 
 
         public static string mostarDatos(string[] data) {
-            string datos = string.Empty;
-            if (data != null) {
-                for (int i = 0; i < data.Length; i++) {
-                    datos = datos + data[i] + ",";
-                }
-                datos = datos.Remove(datos.Length - 1);
-                return datos;
-            }
-            else {
+            if (data == null)
                 return "";
+            
+            string datos = string.Empty;
+
+            for (int i = 0; i < data.Length; i++) {
+                datos = datos + data[i] + ",";
             }
+            datos = datos.Remove(datos.Length - 1);
+            return datos;
         }
 
         public static bool tempCheck(string[] data, bool tipo) {
-            if (data != null) {
-                for (int i = 0; i < data.Length; i++) {
-                    if (tipo) {
-                        if (Double.Parse(data[i].ToString()) < 12) {
-                            return false;
-                        }
-                    }
-                    else {
-                        if (Double.Parse(data[i].ToString()) > 30) {
-                            return false;
-                        }
+            if (data == null)
+                return true;
+
+            for (int i = 0; i < data.Length; i++) {
+                if (tipo) {
+                    if (Double.Parse(data[i].ToString()) < 12) {
+                        return false;
                     }
                 }
-                return true;
+                else {
+                    if (Double.Parse(data[i].ToString()) > 30) {
+                        return false;
+                    }
+                }
             }
             return true;
         }
@@ -238,77 +237,77 @@ namespace NewCode.Web {
         public static string writeHTML(string message) {
             // If we are already ready, disable all the inputs
             string disabled = "";
+            string start = "";
+            // Only show save and cooler mode in configuration mode and start round when we are ready
+            string save = "<button type=\"button\" onclick='save()'>Guardar</button>";
+
             if (ready) {
                 disabled = "disabled";
             }
 
-            // Only show save and cooler mode in configuration mode and start round when we are ready
-            string save = "<button type=\"button\" onclick='save()'>Guardar</button>";
-            string temp = "<a href='#' class='btn btn-primary tm-btn-search' onclick='temp()'>Consultar Temperatura</a>";
+            //string temp = "<a href='#' class='btn btn-primary tm-btn-search' onclick='temp()'>Consultar Temperatura</a>";
 
-            if (ready) {
+            if (ready)
+            {
                 save = "";
-            }
-            string start = "";
-            if (ready) {
                 start = "<button type=\"button\" onclick='start()'>Comenzar Ronda</button>";
             }
-            if (Data.is_working) {
+
+            if (Data.is_working)
                 start = "";
-            }
 
             //Write the HTML page
             string html = "<!DOCTYPE html>" +
             "<html>" +
             "<head>" +
-                            "<meta charset='utf - 8'>" +
-                            "<meta http - equiv = 'X-UA-Compatible' content = 'IE=edge'>" +
-                            "<meta name = 'viewport' content = 'width=device-width, initial-scale=1' > " +
-                            "<title>Netduino Plus 2 Controller</title>" +
-                            "<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700'>" +
-                            "<link rel = 'stylesheet' href = 'http://127.0.0.1:8887/css/bootstrap.min.css'>" +
-                            "<link rel = 'stylesheet' href = 'http://127.0.0.1:8887/css/tooplate-style.css' >" +
-                            "<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.js'> </script>" +
+                "<meta charset='utf - 8'>" +
+                "<meta http - equiv = 'X-UA-Compatible' content = 'IE=edge'>" +
+                "<meta name = 'viewport' content = 'width=device-width, initial-scale=1' > " +
+                "<title>Netduino Plus 2 Controller</title>" +
+                "<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700'>" +
+                "<link rel = 'stylesheet' href = 'http://127.0.0.1:8887/css/bootstrap.min.css'>" +
+                "<link rel = 'stylesheet' href = 'http://127.0.0.1:8887/css/tooplate-style.css' >" +
+                "<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.js'> </script>" +
             "</head>" +
             "<body style=\"background-image: linear-gradient(#006, #777); height: 100vh; color: wheat;\">" +
-                            "<script> function save(){{" +
-                            "console.log(\"SAVE!!\");" +
-                            "var tempMax = document.forms['params']['tempMax'].value;" +
-                            "var tempMin = document.forms['params']['tempMin'].value;" +
-                            "var displayRefresh = document.forms['params']['displayRefresh'].value;" +
-                            "var refresh = document.forms['params']['refresh'].value;" +
-                            "var time = document.forms['params']['time'].value;" +
-                            //"var pass = document.forms['params']['pass'].value;" +
-                            "location.href = 'setparams?tempMax=' + tempMax + '&tempMin=' + tempMin + '&displayRefresh=' + displayRefresh + '&refresh=' + refresh + '&time=' + time + '&pass=' + pass;" +
-                            "}} " +
-                            "function start(){{location.href = 'start'}}" +
-                            "</script>" +
-                            "<div class='col-xs-12 ml-auto mr-auto ie-container-width-fix'>" +
-                            "<form name='params' method = 'get' class='tm-search-form tm-section-pad-2' style=\"display: flex; justify-content: center; align-items: center; flex-direction: column; \">" +
-                            "<div class='form-group tm-form-element tm-form-element-100'>" +
+                "<script> function save(){{" +
+                "console.log(\"SAVE!!\");" +
+                "var tempMax = document.forms['params']['tempMax'].value;" +
+                "var tempMin = document.forms['params']['tempMin'].value;" +
+                "var displayRefresh = document.forms['params']['displayRefresh'].value;" +
+                "var refresh = document.forms['params']['refresh'].value;" +
+                "var time = document.forms['params']['time'].value;" +
+                //"var pass = document.forms['params']['pass'].value;" +
+                "location.href = 'setparams?tempMax=' + tempMax + '&tempMin=' + tempMin + '&displayRefresh=' + displayRefresh + '&refresh=' + refresh + '&time=' + time + '&pass=pass';" +
+                "}} " +
+                "function start(){{location.href = 'start'}}" +
+                "</script>" +
+                "<div class='col-xs-12 ml-auto mr-auto ie-container-width-fix'>" +
+                    "<form name='params' method = 'get' class='tm-search-form tm-section-pad-2' style=\"display: flex; justify-content: center; align-items: center; flex-direction: column; \">" +
+                        "<div class='form-group tm-form-element tm-form-element-100'>" +
                             "<p>Temperatura Max <b>(&deg;C)</b> <input name='tempMax' type='text' class='form-control' value='" + mostarDatos(Data.temp_max) + "' " + disabled + "></input></p>" +
-                            "</div>" +
-                            "<div class='form-group tm-form-element tm-form-element-50'>" +
+                        "</div>" +
+                        "<div class='form-group tm-form-element tm-form-element-50'>" +
                             "<p>Temperatura Min <b>(&deg;C)</b> <input name='tempMin' type='text' class='form-control' value='" + mostarDatos(Data.temp_min) + "' " + disabled + "></input></p>" +
-                            "</div>" +
-                            "<div class='form-group tm-form-element tm-form-element-50'>" +
+                        "</div>" +
+                        "<div class='form-group tm-form-element tm-form-element-50'>" +
                             "<p>Duraci&oacute;n Ronda <b>(s)</b> <input name='time' type='text' class='form-control' value='" + mostarDatos(Data.round_time) + "' " + disabled + "></input></p>" +
-                            "</div>" +
-                            "<div class='form-group tm-form-element tm-form-element-100'>" +
+                        "</div>" +
+                        "<div class='form-group tm-form-element tm-form-element-100'>" +
                             "<p>Cadencia Refresco <b>(ms)</b> <input name='displayRefresh' type='number' class='form-control' value='" + Data.display_refresh + "' " + disabled + "></input></p>" +
-                            "</div>" +
-                            "<div class='form-group tm-form-element tm-form-element-50'>" +
+                        "</div>" +
+                        "<div class='form-group tm-form-element tm-form-element-50'>" +
                             "<p>Cadencia Interna <b>(ms)</b> <input name='refresh' type='number' class='form-control' value='" + Data.refresh + "' " + disabled + "></input></p>" +
-                            "</div>" +
-                            //"<div class='form-group tm-form-element tm-form-element-50'>" +
+                        "</div>" +
+                        //"<div class='form-group tm-form-element tm-form-element-50'>" +
                             //"<p>Contrase&ntilde;a <input name='pass' type='password' class='form-control'> </input></p>" +
-                            "</form>" +
-                            "<div class='form-group tm-form-element tm-form-element-50'>" +
-                            save + start +
-                            //"</div>" +
-                            "</div>" +
-                            "<p style='text-align:center;font-weight:bold;'>" + message + "</p>" +
-                            "</div>" +
+                    "</form>" +
+                "<div class='form-group tm-form-element tm-form-element-50'>" +
+                     save + start +
+                    //"</div>" +
+                "</div>" +
+                     "<p style='text-align:center;font-weight:bold;'>" + message + "</p>" +
+                "</div>" +
             "</body>" +
             "</html>";
             return html;

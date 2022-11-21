@@ -166,26 +166,32 @@ namespace NewCode {
             Console.WriteLine("STARTING");
 
             //THE TW START WORKING
-            while (Data.is_working) {
-
+            while (Data.is_working)
+            {
+                Console.WriteLine("regTempTimer.Elapsed " + regTempTimer.Elapsed);
+                Console.WriteLine("Data.temp_act " + Data.temp_act);
+                Console.WriteLine("Data.temp_min " + Data.temp_min);
+                Console.WriteLine("Data.temp_max " + Data.temp_max);
+                Console.WriteLine("Data.current_round " + Data.current_round);
+                Console.WriteLine("regTempTimer.Elapsed " + regTempTimer.Elapsed);
                 //This is the time refresh we did not do before
                 Thread.Sleep(Data.refresh - sleep_time);
 
                 //Temperature registration
-                Console.WriteLine($"RegTempTimer={regTempTimer.Elapsed.ToString()}, enviando Temp={Data.temp_act}");
+                Console.WriteLine($"RegTempTimer={regTempTimer.Elapsed}, enviando Temp={Data.temp_act}");
                 if (double.Parse(Data.temp_act) < double.Parse(Data.temp_min[Data.current_round]))
                 {
-                    //calentar
                     Console.WriteLine("Calentar");
                     Data.on = false;
                 }
                 if (double.Parse(Data.temp_act) > double.Parse(Data.temp_max[Data.current_round]))
                 {
-                    //enfriar
                     Console.WriteLine("Enfriar");
                     Data.on = true;
                 }
+                Console.WriteLine("registrar temp...");
                 timeController.RegisterTemperature(double.Parse(Data.temp_act));
+                Console.WriteLine("reiniciar crono");
                 regTempTimer.Restart();
 
             }
@@ -203,16 +209,16 @@ namespace NewCode {
         //Round Timer
         private static void Timer() {
             Data.is_working = true;
-            //Console.WriteLine("-----------------" + Data.round_time.Length);
+            Console.WriteLine("-----------------" + Data.round_time.Length);
             for (int i = 0; i < Data.round_time.Length; i++) {
-                //Console.WriteLine("i= " + i + "; round_time= " + Data.round_time[i]);
+                Console.WriteLine("i= " + i + "; round_time= " + Data.round_time[i]);
                 Data.time_left = int.Parse(Data.round_time[i]);
                 Data.current_round = i;
                 while (Data.time_left > 0) {
                     Data.time_left--;
                     Thread.Sleep(1000);
                 }
-                //Console.WriteLine("fin de la ronda: " + i + "; Data.is_working= " + Data.is_working);
+                Console.WriteLine("fin de la ronda: " + i + "; Data.is_working= " + Data.is_working);
 
             }
             Data.is_working = false;

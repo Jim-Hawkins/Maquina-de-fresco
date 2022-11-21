@@ -13,7 +13,7 @@ namespace NewCode {
         public static string[] temp_min = { "16", "12" }; // In ºC
         public static int display_refresh = 100; // In ms
         public static int refresh = 100; // In ms
-        public static String[] round_time = { "60", "5" }; // in s
+        public static String[] round_time = { "10", "10" }; // in s
         public static int current_round = 0;
 
         //START ROUND VARIABLES
