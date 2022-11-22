@@ -124,11 +124,11 @@ namespace NewCode.Web {
 
                                         // Param 0 => Temp max
                                         string[] temp_max_parts = parameters[0].Split('=');
-                                        Data.temp_max = new string[] { temp_max_parts[1] };
+                                        Data.temp_max =  temp_max_parts[1].Split(",");
 
                                         // Param 1 => Temp min
                                         string[] temp_min_parts = parameters[1].Split('=');
-                                        Data.temp_min = new string[] { temp_min_parts[1] };
+                                        Data.temp_min =  temp_min_parts[1].Split(",");
 
                                         // Param 2 => to display_refresh
                                         string[] display_refresh_parts = parameters[2].Split('=');
@@ -140,16 +140,17 @@ namespace NewCode.Web {
 
                                         // Param 4 => to round_time
                                         string[] round_time_parts = parameters[4].Split('=');
-                                        Data.round_time = new string[] { round_time_parts[1] };
+                                        Data.round_time = round_time_parts[1].Split(",");
 
-                                        if (!tempCheck(Data.temp_max, false) || !tempCheck(Data.temp_min, true)) {
-                                            message = "El rango de temperatura m&aacute;ximo es entre 30 y 12 grados C.";
-                                        }
-
-                                        else {
-                                            message = "Los par&aacute;metros se han cambiado satisfactoriamente. Todo preparado.";
-                                            ready = true;
-                                        }
+                                            if (!tempCheck(Data.temp_max, false) || !tempCheck(Data.temp_min, true))
+                                            {
+                                                message = "El rango de temperatura m&aacute;ximo es entre 30 y 12 grados C.";
+                                            }
+                                            else
+                                            {
+                                                message = "Los par&aacute;metros se han cambiado satisfactoriamente. Todo preparado.";
+                                                ready = true;
+                                            }
                                     }
                                     else {
                                         message = "La contrase&ntilde;a es incorrecta.";
@@ -269,12 +270,12 @@ namespace NewCode.Web {
             "<body>" +
                             "<script> function save(){{" +
                             "console.log(\"SAVE!!\");" +
-                            "var tempMax = document.forms['params']['tempMax'].value;" +
-                            "var tempMin = document.forms['params']['tempMin'].value;" +
-                            "var displayRefresh = document.forms['params']['displayRefresh'].value;" +
-                            "var refresh = document.forms['params']['refresh'].value;" +
-                            "var time = document.forms['params']['time'].value;" +
-                            "var pass = document.forms['params']['pass'].value;" +
+                            "var tempMax = {document.forms['params']['tempMax'].value, document.forms['params']['tempMax2'].value};" +
+                            "var tempMin = {document.forms['params']['tempMin'].value, document.forms['params']['tempMin2'].value};" +
+                            "var displayRefresh = {document.forms['params']['displayRefresh'].value, document.forms['params']['displayRefresh2'].value};" +
+                            "var refresh = {document.forms['params']['refresh'].value, document.forms['params']['refresh2'].value};" +
+                            "var time = {document.forms['params']['time'].value, document.forms['params']['time2'].value};" +
+                            "var pass = {document.forms['params']['pass'].value, document.forms['params']['pass2'].value};" +
                             "location.href = 'setparams?tempMax=' + tempMax + '&tempMin=' + tempMin + '&displayRefresh=' + displayRefresh + '&refresh=' + refresh + '&time=' + time + '&pass=' + pass;" +
                             "}} " +
                             "function start(){{location.href = 'start'}}" +
@@ -322,6 +323,36 @@ namespace NewCode.Web {
 
                             "</form>" +
                             "<div class='form-group tm-form-element tm-form-element-50'>" +
+
+                            //----------------------------------------
+                            "<div class='col-xs-12 ml-auto mr-auto ie-container-width-fix'>" +
+                            "<form name='params2' method = 'get' class='tm-search-form tm-section-pad-2'>" +
+                            "<div class='form-row tm-search-form-row'>" +
+                            "<div class='form-group tm-form-element tm-form-element-100'>" +
+                            "<p>Temperatura Max <b>(&deg;C)</b> <input name='tempMax2' type='text' class='form-control' value='" + mostarDatos(Data.temp_max) + "' " + disabled + "></input></p>" +
+                            "</div>" +
+                            "<div class='form-group tm-form-element tm-form-element-50'>" +
+                            "<p>Temperatura Min <b>(&deg;C)</b> <input name='tempMin2' type='text' class='form-control' value='" + mostarDatos(Data.temp_min) + "' " + disabled + "></input></p>" +
+                            "</div>" +
+                            "<div class='form-group tm-form-element tm-form-element-50'>" +
+                            "<p>Duraci&oacute;n Ronda <b>(s)</b> <input name='time2' type='text' class='form-control' value='" + mostarDatos(Data.round_time) + "' " + disabled + "></input></p>" +
+                            "</div>" +
+                            "</div>" +
+                            "<div class='form-row tm-search-form-row'>" +
+                            "<div class='form-group tm-form-element tm-form-element-100'>" +
+                            "<p>Cadencia Refresco <b>(ms)</b> <input name='displayRefresh2' type='number' class='form-control' value='" + Data.display_refresh + "' " + disabled + "></input></p>" +
+                            "</div>" +
+                            "<div class='form-group tm-form-element tm-form-element-50'>" +
+                            "<p>Cadencia Interna <b>(ms)</b> <input name='refresh2' type='number' class='form-control' value='" + Data.refresh + "' " + disabled + "></input></p>" +
+                            "</div>" +
+                            "<div class='form-group tm-form-element tm-form-element-50'>" +
+                            "<p>Contrase&ntilde;a <input name='pass2' type='password' class='form-control'> </input></p>" +
+                            "</div>" +
+
+                            "</form>" +
+                            "<div class='form-group tm-form-element tm-form-element-50'>" +
+                            //----------------------------------------
+
                             save + start +
                             "</div>" +
                             "<div class='form-group tm-form-element tm-form-element-50'>" +

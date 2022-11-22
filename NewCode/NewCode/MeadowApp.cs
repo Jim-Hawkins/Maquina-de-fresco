@@ -106,46 +106,49 @@ namespace NewCode {
             //Configuration of differents ranges
             TemperatureRange[] temperatureRanges = new TemperatureRange[Data.round_time.Length];
 
-            //Range configurations
             bool success;
+            //Range configurations
             string error_message = null;
             Data.is_working = true;
 
-
-            //define ranges
-            temperatureRanges[0] = new TemperatureRange(double.Parse(Data.temp_min[0]), double.Parse(Data.temp_max[0]), int.Parse(Data.round_time[0]) * 1000);
-            total_time += int.Parse(Data.round_time[0]);
-
-            //Initialization of timecontroller with the ranges
-            timeController.DEBUG_MODE = true;
-            success = timeController.Configure(temperatureRanges, total_time * 1000, Data.refresh, out error_message);
-
-            timeController.StartOperation();
-
-            //Initialization of timer
-            new Thread(Timer).Start();
-
-            //THE TW START WORKING
-            while (Data.is_working) {
-
-                //This is the time refresh we did not do before
-                Thread.Sleep(Data.refresh - sleep_time);
-
-                Console.WriteLine(Data.temp_act);
-
-                //Temperature registration
-                timeController.RegisterTemperature(double.Parse(Data.temp_act));
-
+            for (int i = 0; i < temperatureRanges.Length; i++)
+            {
+                //define ranges
+                temperatureRanges[i] = new TemperatureRange(double.Parse(Data.temp_min[i]), double.Parse(Data.temp_max[i]), int.Parse(Data.round_time[i]) * 1000);
+                total_time += int.Parse(Data.round_time[i]);
             }
-            Console.WriteLine("Round Finish");
+                //Initialization of timecontroller with the ranges
+                timeController.DEBUG_MODE = true;
+                success = timeController.Configure(temperatureRanges, total_time * 1000, Data.refresh, out error_message);
 
-            total_time_in_range += timeController.TimeInRangeInMilliseconds;
-            total_time_out_of_range += timeController.TimeOutOfRangeInMilliseconds;
-            Data.time_in_range_temp = (timeController.TimeInRangeInMilliseconds / 1000);
+                timeController.StartOperation();
 
-            Console.WriteLine("Tiempo dentro del rango " + ((timeController.TimeInRangeInMilliseconds / 1000)) + " s de " + total_time + " s");
-            Console.WriteLine("Tiempo fuera del rango " + total_time_out_of_range / 1000 + " s de " + total_time + " s");
-        }
+                //Initialization of timer
+                new Thread(Timer).Start();
+
+                //THE TW START WORKING
+                while (Data.is_working)
+                {
+
+                    //This is the time refresh we did not do before
+                    Thread.Sleep(Data.refresh - sleep_time);
+
+                    Console.WriteLine(Data.temp_act);
+
+                    //Temperature registration
+                    timeController.RegisterTemperature(double.Parse(Data.temp_act));
+
+                }
+                Console.WriteLine("Round Finish");
+
+                total_time_in_range += timeController.TimeInRangeInMilliseconds;
+                total_time_out_of_range += timeController.TimeOutOfRangeInMilliseconds;
+                Data.time_in_range_temp = (timeController.TimeInRangeInMilliseconds / 1000);
+
+                Console.WriteLine("Tiempo dentro del rango " + ((timeController.TimeInRangeInMilliseconds / 1000)) + " s de " + total_time + " s");
+                Console.WriteLine("Tiempo fuera del rango " + total_time_out_of_range / 1000 + " s de " + total_time + " s");
+            }
+
 
         //Round Timer
         private static void Timer() {

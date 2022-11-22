@@ -11,8 +11,8 @@ namespace NewCode {
         //ROUND VARIABLES
         public static string[] temp_max = { "18", "30" }; // In ºC
         public static string[] temp_min = { "16", "12" }; // In ºC
-        public static int display_refresh = 100; // In ms
-        public static int refresh = 100; // In ms
+        public static int display_refresh = 1000; // In ms
+        public static int refresh = 1000; // In ms
         public static String[] round_time = { "10", "10" }; // in s
         public static int current_round = 0;
 
