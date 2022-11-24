@@ -3,6 +3,7 @@ using Meadow.Foundation;
 using Meadow.Foundation.Sensors.Temperature;
 using Meadow.Foundation.Graphics;
 using Meadow.Foundation.Displays;
+using Meadow.Foundation.Relays;
 using Meadow.Devices;
 using Meadow.Hardware;
 using Meadow.Gateway.WiFi;
@@ -33,6 +34,7 @@ namespace NewCode {
         public static int total_time = 0;
         public static int total_time_in_range = 0;
         public static int total_time_out_of_range = 0;
+        protected Relay relay;
 
         public int count = 0;
 
@@ -87,40 +89,28 @@ namespace NewCode {
 
                 Console.WriteLine("Done.");
 
-                count = count + 1;
+                count++;
 
-                // HArdcoding and running scenario
-                //HardcodeRound();
-                //StartRound();
+                
+                /*
+                    //Data.relayOn = !Data.relayOn;
 
+                    //Console.WriteLine($"- State: {relay.IsOn}");
+                    //relay.IsOn = Data.relayOn;
+                    relay.Toggle();
+                    Console.WriteLine("Cambio");
 
-                //sensor.StopUpdating();
-                //t.Abort();
+                    Thread.Sleep(5000);*/
+                
             }
         }
+        public override Task Initialize()
+        {
+            Console.WriteLine("Initialize...");
 
-        private void HardcodeRound() {
+            relay = new Relay(Device.CreateDigitalOutputPort(Device.Pins.D05));
 
-            // Param 0 => Temp max
-            //string[] temp_max_parts = parameters[0].Split('=');
-            //Data.temp_max = new string[] { temp_max_parts[1] };
-            Data.temp_max = new string[] { "24", "30" };
-
-            // Param 1 => Temp min
-            //string[] temp_min_parts = parameters[1].Split('=');
-            //Data.temp_min = new string[] { temp_min_parts[1] };
-            Data.temp_min = new string[] { "12", "12" };
-
-            // Param 2 => to display_refresh
-            Data.display_refresh = 1000;
-
-            // Param 3 => to refresh
-            Data.refresh = 1000;
-
-            // Param 4 => to round_time
-            //string[] round_time_parts = parameters[4].Split('=');
-            //Data.round_time = new string[] { round_time_parts[1] };
-            Data.round_time = new string[] { "10", "10" };
+            return Task.CompletedTask;
         }
 
         //TW Combat Round
@@ -170,10 +160,7 @@ namespace NewCode {
             {
                 Console.WriteLine("regTempTimer.Elapsed " + regTempTimer.Elapsed);
                 Console.WriteLine("Data.temp_act " + Data.temp_act);
-                Console.WriteLine("Data.temp_min " + Data.temp_min);
-                Console.WriteLine("Data.temp_max " + Data.temp_max);
                 Console.WriteLine("Data.current_round " + Data.current_round);
-                Console.WriteLine("regTempTimer.Elapsed " + regTempTimer.Elapsed);
                 //This is the time refresh we did not do before
                 Thread.Sleep(Data.refresh - sleep_time);
 
@@ -182,15 +169,21 @@ namespace NewCode {
                 if (double.Parse(Data.temp_act) < double.Parse(Data.temp_min[Data.current_round]))
                 {
                     Console.WriteLine("Calentar");
-                    Data.on = false;
+                    Data.relayOn = false;
                 }
                 if (double.Parse(Data.temp_act) > double.Parse(Data.temp_max[Data.current_round]))
                 {
                     Console.WriteLine("Enfriar");
-                    Data.on = true;
+                    Data.relayOn = true;
                 }
                 Console.WriteLine("registrar temp...");
-                timeController.RegisterTemperature(double.Parse(Data.temp_act));
+                try
+                {
+                    timeController.RegisterTemperature(double.Parse(Data.temp_act));
+                } catch
+                {
+                    Console.WriteLine("null error");
+                }
                 Console.WriteLine("reiniciar crono");
                 regTempTimer.Restart();
 
@@ -277,7 +270,6 @@ namespace NewCode {
             graphics.Show();
             //Update Display with new temperature
             Data.temp_act = Math.Round((Double)e.New.Celsius, 2).ToString();
-            //Data.temp_act = "21";
 
         }
 

@@ -20,7 +20,7 @@ namespace NewCode {
         public static bool is_working = false;
         public static string temp_act = "0"; // In ºC
         public static int time_left; // in s
-        public static int time_in_range_temp = 0; //In ms.
+        public static double time_in_range_temp = 0; //In ms.
                                            
         //COLORS FOR DISPLAY
         public static Color[] colors = new Color[4]
@@ -32,6 +32,6 @@ namespace NewCode {
         };
 
         //RELAY VARIABLES
-        public static bool on = true; // enfriando
+        public static bool relayOn = true; // enfriando
     }
 }
