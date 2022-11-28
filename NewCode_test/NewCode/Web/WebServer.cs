@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Threading;
+using System.Text.RegularExpressions;
 
 namespace NewCode.Web {
     public class WebServer {
@@ -18,6 +19,10 @@ namespace NewCode.Web {
         private static bool ready = false;
         private static readonly string pass = "pass";
         private static string message = "";
+
+        private static Regex tempRegex   = new Regex(@"^(tempMax|tempMin)=([0-9][0-9],)*[0-9][0-9]$");
+        private static Regex roundTimeRegex = new Regex(@"^time=([0-9]+,)*[0-9]+$");
+        private static Regex refreshRegex   = new Regex(@"^(refresh|displayRefresh)=[0-9]+$");
 
 
         /// <summary>
@@ -119,6 +124,11 @@ namespace NewCode.Web {
             }
 
             // Param 0 => Temp max
+            if (!tempRegex.Match(parameters[0]).Success)
+            {
+                res[0] = "El formato de temperatura m&aacute;xima es ^tempMax=([0-9][0-9],)*[0-9][0-9]$";
+                return res;
+            }
             string[] temp_max_parts = parameters[0].Split('=')[1].Split(",");
             if (!tempCheck(temp_max_parts, false))
             {
@@ -126,19 +136,43 @@ namespace NewCode.Web {
                 return res;
             }
             Data.temp_max = parameters[0].Split('=')[1].Split(",");
+
             // Param 1 => Temp min
-            string[] temp_min_parts = parameters[0].Split('=')[1].Split(",");
+            if (!tempRegex.Match(parameters[1]).Success)
+            {
+                res[0] = "El formato de temperatura m&iacute;nima es ^tempMin=([0-9][0-9],)*[0-9][0-9]$";
+                return res;
+            }
+            string[] temp_min_parts = parameters[1].Split('=')[1].Split(",");
             if (!tempCheck(temp_min_parts, true))
             {
                 res[0] = "La temperatura m&iacute;nima es 12 grados Celsius";
                 return res;
             }
             Data.temp_min = parameters[1].Split("=")[1].Split(",");
+
             // Param 2 => to display_refresh
+            if (!refreshRegex.Match(parameters[2]).Success)
+            {
+                res[0] = "El formato de tiempo de refresco es ^displayRefresh=[0-9]+$";
+                return res;
+            }
             Data.display_refresh = Int16.Parse(parameters[2].Split('=')[1]);
+
             // Param 3 => to refresh
+            if (!refreshRegex.Match(parameters[3]).Success)
+            {
+                res[0] = "El formato de tiempo de refresco es ^refresh=[0-9]+$";
+                return res;
+            }
             Data.refresh = Int16.Parse(parameters[3].Split('=')[1]);
+
             // Param 4 => to round_time
+            if (!refreshRegex.Match(parameters[4]).Success)
+            {
+                res[0] = "El formato de tiempo de ronda es ^time=([0-9]+,)*[0-9]+$";
+                return res;
+            }
             Data.round_time = parameters[4].Split('=')[1].Split(",");
 
             res[0] = "Los par&aacute;metros se han cambiado satisfactoriamente. Todo preparado.";
@@ -180,58 +214,6 @@ namespace NewCode.Web {
                         String[] result = HandleSetParams(url);
                         message = result[0];
                         ready = Equals(result[1], "t");
-                        //if (!string.IsNullOrWhiteSpace(url)) {
-
-                        //Get text to the right from the interrogation mark
-                        /*string[] urlParts = url.Split('?');
-                        if (urlParts?.Length > 1) {
-
-                            //The parametes are in the array first position
-                            string[] parameters = urlParts[1].Split('&');
-                            if (parameters?.Length >= 6) {
-
-                                // Param 5 => to pass
-                                string[] pass_parts = parameters[5].Split('=');
-                                string pass_temp = pass_parts[1];
-
-                                if (string.Equals(pass, pass_temp)) {
-
-                                    // Param 0 => Temp max
-                                    string[] temp_max_parts = parameters[0].Split('=');
-                                    Data.temp_max = temp_max_parts[1].Split(",");
-
-                                    // Param 1 => Temp min
-                                    string[] temp_min_parts = parameters[1].Split('=');
-                                    Data.temp_min = temp_min_parts[1].Split(",");
-
-                                    // Param 2 => to display_refresh
-                                    string[] display_refresh_parts = parameters[2].Split('=');
-                                    Data.display_refresh = Int16.Parse(display_refresh_parts[1]);
-                                
-                                    // Param 3 => to refresh
-                                    string[] refresh_parts = parameters[3].Split('=');
-                                    Data.refresh = Int16.Parse(refresh_parts[1]);
-                 
-
-                                    // Param 4 => to round_time
-                                    string[] round_time_parts = parameters[4].Split('=');
-                                    Data.round_time = round_time_parts[1].Split(",");
-
-                                if (!tempCheck(Data.temp_max, false) || !tempCheck(Data.temp_min, true)) {
-                                        message = "El rango de temperatura m&aacute;ximo es entre 30 y 12 grados C.";
-                                    }
-                                    else {
-                                        message = "Los par&aacute;metros se han cambiado satisfactoriamente. Todo preparado.";
-                                        ready = true;
-                                    }
-                                }
-                                else {
-                                    message = "La contrase&ntilde;a es incorrecta.";
-                                }
-                            }
-                        }*/
-                        //}
-
                     }
                     if (req.Url.AbsolutePath == "/start") {
                         Console.WriteLine("empieza ronda");
@@ -247,7 +229,9 @@ namespace NewCode.Web {
                         // Wait for the round to finish
                         Thread.Sleep(rango*1000 + 2000);
                         ready = false;
-                        message = String.Format("Se ha terminado la ronda con {0:0.00} s en el rango indicado.", Data.time_in_range_temp);
+                        int pepe = (int) Data.time_in_range_temp;
+                        int jose = ((int)Data.time_in_range_temp - pepe) * 1000;
+                        message = "Se ha terminado la ronda con " + pepe + "." + jose + " s en el rango indicado.";
                     }
 
                     // Write the response info

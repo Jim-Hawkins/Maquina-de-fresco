@@ -34,7 +34,7 @@ namespace NewCode {
         public static int total_time = 0;
         public static int total_time_in_range = 0;
         public static int total_time_out_of_range = 0;
-        protected Relay relay;
+        public static Relay[] relay = new Relay[4];
 
         public int count = 0;
 
@@ -82,6 +82,11 @@ namespace NewCode {
                     }
                 }
 
+                relay[0] = new Meadow.Foundation.Relays.Relay(Device, Device.Pins.D04);
+                relay[1] = new Meadow.Foundation.Relays.Relay(Device, Device.Pins.D05);
+                relay[2] = new Meadow.Foundation.Relays.Relay(Device, Device.Pins.D06);
+                relay[3] = new Meadow.Foundation.Relays.Relay(Device, Device.Pins.D07);
+
                 Display();
 
                 Thread t = new Thread(ReadTemp);
@@ -89,32 +94,14 @@ namespace NewCode {
 
                 Console.WriteLine("Done.");
 
+
                 count++;
-
-                
-                /*
-                    //Data.relayOn = !Data.relayOn;
-
-                    //Console.WriteLine($"- State: {relay.IsOn}");
-                    //relay.IsOn = Data.relayOn;
-                    relay.Toggle();
-                    Console.WriteLine("Cambio");
-
-                    Thread.Sleep(5000);*/
-                
             }
-        }
-        public override Task Initialize()
-        {
-            Console.WriteLine("Initialize...");
-
-            relay = new Relay(Device.CreateDigitalOutputPort(Device.Pins.D05));
-
-            return Task.CompletedTask;
         }
 
         //TW Combat Round
-        public static void StartRound() {
+        public static void StartRound()
+        {
 
             Stopwatch timer = Stopwatch.StartNew();
             timer.Start();
@@ -135,11 +122,12 @@ namespace NewCode {
             Data.is_working = true;
 
             //define ranges
-            for (int i = 0; i < Data.temp_min.Length; i++) {
+            for (int i = 0; i < Data.temp_min.Length; i++)
+            {
                 temperatureRanges[i] = new TemperatureRange(double.Parse(Data.temp_min[i]), double.Parse(Data.temp_max[i]), int.Parse(Data.round_time[i]) * 1000);
                 total_time += int.Parse(Data.round_time[i]);
             }
-            
+
             //Initialization of timecontroller with the ranges
             timeController.DEBUG_MODE = false;
             success = timeController.Configure(temperatureRanges, total_time * 1000, Data.refresh, out error_message);
@@ -170,17 +158,20 @@ namespace NewCode {
                 {
                     Console.WriteLine("Calentar");
                     Data.relayOn = false;
+                    //relay.IsOn = Data.relayOn;
                 }
                 if (double.Parse(Data.temp_act) > double.Parse(Data.temp_max[Data.current_round]))
                 {
                     Console.WriteLine("Enfriar");
                     Data.relayOn = true;
+                    //relay.IsOn = Data.relayOn;
                 }
                 Console.WriteLine("registrar temp...");
                 try
                 {
                     timeController.RegisterTemperature(double.Parse(Data.temp_act));
-                } catch
+                }
+                catch
                 {
                     Console.WriteLine("null error");
                 }
@@ -197,6 +188,21 @@ namespace NewCode {
 
             Console.WriteLine("Tiempo dentro del rango " + (((double)timeController.TimeInRangeInMilliseconds / 1000)) + " s de " + total_time + " s");
             Console.WriteLine("Tiempo fuera del rango " + ((double)total_time_out_of_range / 1000) + " s de " + total_time + " s");
+
+            for (int r = 0; r < 4; r++)
+            {
+                Console.WriteLine("relay " + r);
+                for (int i = 0; i < 6; i++)
+                {
+                    Thread.Sleep(1000);
+                    relay[r].Toggle();
+                    Console.WriteLine(relay[r].IsOn);
+
+                    Thread.Sleep(1000);
+                    relay[r].Toggle();
+                    Console.WriteLine(relay[r].IsOn);
+                }
+            }
         }
 
         //Round Timer
