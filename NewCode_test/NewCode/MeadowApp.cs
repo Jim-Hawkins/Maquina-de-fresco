@@ -34,7 +34,10 @@ namespace NewCode {
         public static int total_time = 0;
         public static int total_time_in_range = 0;
         public static int total_time_out_of_range = 0;
-        public static Relay[] relay = new Relay[4];
+        public static Relay[] relay = new Relay[2];   // 0 secador; 1 peltier
+
+        public static int totalTime = 0;
+        
 
         public int count = 0;
 
@@ -82,10 +85,8 @@ namespace NewCode {
                     }
                 }
 
-                relay[0] = new Meadow.Foundation.Relays.Relay(Device, Device.Pins.D04);
-                relay[1] = new Meadow.Foundation.Relays.Relay(Device, Device.Pins.D05);
-                relay[2] = new Meadow.Foundation.Relays.Relay(Device, Device.Pins.D06);
-                relay[3] = new Meadow.Foundation.Relays.Relay(Device, Device.Pins.D07);
+                relay[0] = new Meadow.Foundation.Relays.Relay(Device, Device.Pins.D04); // secador
+                relay[1] = new Meadow.Foundation.Relays.Relay(Device, Device.Pins.D05); // peltier
 
                 Display();
 
@@ -108,10 +109,12 @@ namespace NewCode {
 
             //Value to control the time for heating and cooling
             //First iteration is 100 for the time spend creating timecontroller and thread
-            int sleep_time = 20;
+            int sleep_time = 500;//20;
 
             //Initialization of time controller
-            TimeController timeController = new TimeController();
+            //TimeController timeController = new TimeController();
+            int timeInRange = 0;
+
 
             //Configuration of differents ranges
             TemperatureRange[] temperatureRanges = new TemperatureRange[Data.round_time.Length];
@@ -122,6 +125,7 @@ namespace NewCode {
             Data.is_working = true;
 
             //define ranges
+            total_time = 0;
             for (int i = 0; i < Data.temp_min.Length; i++)
             {
                 temperatureRanges[i] = new TemperatureRange(double.Parse(Data.temp_min[i]), double.Parse(Data.temp_max[i]), int.Parse(Data.round_time[i]) * 1000);
@@ -129,23 +133,28 @@ namespace NewCode {
             }
 
             //Initialization of timecontroller with the ranges
-            timeController.DEBUG_MODE = false;
-            success = timeController.Configure(temperatureRanges, total_time * 1000, Data.refresh, out error_message);
-            Console.WriteLine(success);
+            //timeController.DEBUG_MODE = false;
+            //success = timeController.Configure(temperatureRanges, total_time * 1000, Data.refresh, out error_message);
+            //Console.WriteLine(success);
 
             //Initialization of timer
             Thread t = new Thread(Timer);
             t.Start();
 
             Stopwatch regTempTimer = new Stopwatch();
-            timeController.StartOperation(); // aquí se inicia el conteo en la librería de control
+            //timeController.StartOperation(); // aquí se inicia el conteo en la librería de control
             regTempTimer.Start();
 
             Console.WriteLine("STARTING");
-
             //THE TW START WORKING
+            int curr_round = Data.current_round;
             while (Data.is_working)
             {
+                /*if (Data.current_round > curr_round)
+                {
+                    curr_round = Data.current_round;
+                    timeInRange = 0;
+                }*/
                 Console.WriteLine("regTempTimer.Elapsed " + regTempTimer.Elapsed);
                 Console.WriteLine("Data.temp_act " + Data.temp_act);
                 Console.WriteLine("Data.current_round " + Data.current_round);
@@ -157,52 +166,63 @@ namespace NewCode {
                 if (double.Parse(Data.temp_act) < double.Parse(Data.temp_min[Data.current_round]))
                 {
                     Console.WriteLine("Calentar");
-                    Data.relayOn = false;
-                    //relay.IsOn = Data.relayOn;
+                    relay[0].IsOn = true;
+                    relay[1].IsOn = false;
                 }
-                if (double.Parse(Data.temp_act) > double.Parse(Data.temp_max[Data.current_round]))
+                else if (double.Parse(Data.temp_act) > double.Parse(Data.temp_max[Data.current_round]))
                 {
                     Console.WriteLine("Enfriar");
-                    Data.relayOn = true;
-                    //relay.IsOn = Data.relayOn;
+                    relay[0].IsOn = false;
+                    relay[1].IsOn = true;
                 }
+                else {
+                    Console.WriteLine("En rango");
+                    relay[0].IsOn = false;
+                    relay[1].IsOn = false;
+                }
+                Thread.Sleep(sleep_time);
+
+                relay[0].IsOn = false;
+                relay[1].IsOn = false;
                 Console.WriteLine("registrar temp...");
-                try
+                if (double.Parse(Data.temp_act) <= double.Parse(Data.temp_max[Data.current_round])
+                    && double.Parse(Data.temp_act) >= double.Parse(Data.temp_min[Data.current_round]))
+                {
+                    timeInRange++;
+                    Console.WriteLine("time in range: " + timeInRange);
+                }
+                /*try
                 {
                     timeController.RegisterTemperature(double.Parse(Data.temp_act));
                 }
                 catch
                 {
                     Console.WriteLine("null error");
-                }
-                Console.WriteLine("reiniciar crono");
+                }*/
+                //Console.WriteLine("reiniciar crono");
                 regTempTimer.Restart();
 
             }
             Console.WriteLine("Round Finish");
+
+            relay[0].IsOn = false;
+            relay[1].IsOn = false;
             t.Abort();
 
-            total_time_in_range += timeController.TimeInRangeInMilliseconds;
-            total_time_out_of_range += timeController.TimeOutOfRangeInMilliseconds;
-            Data.time_in_range_temp = (timeController.TimeInRangeInMilliseconds / 1000);
+            total_time_in_range = timeInRange;
+            total_time_out_of_range = total_time - total_time_in_range;
+            Data.time_in_range_temp = total_time_in_range;
 
-            Console.WriteLine("Tiempo dentro del rango " + (((double)timeController.TimeInRangeInMilliseconds / 1000)) + " s de " + total_time + " s");
-            Console.WriteLine("Tiempo fuera del rango " + ((double)total_time_out_of_range / 1000) + " s de " + total_time + " s");
+            Console.WriteLine("Tiempo total: " + total_time);
+            Console.WriteLine("Tiempo dentro del rango " + (((double)total_time_in_range)) + " s de " + total_time + " s");
+            Console.WriteLine("Tiempo fuera del rango " + ((double)total_time_out_of_range) + " s de " + total_time + " s");
 
-            for (int r = 0; r < 4; r++)
-            {
-                Console.WriteLine("relay " + r);
-                for (int i = 0; i < 6; i++)
-                {
-                    Thread.Sleep(1000);
-                    relay[r].Toggle();
-                    Console.WriteLine(relay[r].IsOn);
+            //total_time_in_range += timeController.TimeInRangeInMilliseconds;
+            //total_time_out_of_range += timeController.TimeOutOfRangeInMilliseconds;
+            //Data.time_in_range_temp = (timeController.TimeInRangeInMilliseconds / 1000);
 
-                    Thread.Sleep(1000);
-                    relay[r].Toggle();
-                    Console.WriteLine(relay[r].IsOn);
-                }
-            }
+            //Console.WriteLine("Tiempo dentro del rango " + (((double)timeController.TimeInRangeInMilliseconds / 1000)) + " s de " + total_time + " s");
+            //Console.WriteLine("Tiempo fuera del rango " + ((double)total_time_out_of_range / 1000) + " s de " + total_time + " s");
         }
 
         //Round Timer

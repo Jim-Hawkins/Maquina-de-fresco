@@ -1,0 +1,31 @@
+# Casos posibles:
+
+# 1º: El próximo rango está delimitado por el actual:
+# min0 < min1 < max1 < max0
+# Estartegia:
+# Nuevo rango = min1,max1
+
+# 2º: El próximo rango delimita el actual:
+# min1 < min0 < max0 < max1
+# Estartegia:
+# Default
+
+# 3º: El próximo min está dentro del rango actual:
+# min0 < min1 < max0 < max1
+# Estartegia:
+# Nuevo rango = min1,max0
+
+# 4º: El próximo max está dentro del rango actual:
+# min1 < min0 < max1 < max0
+# Estartegia:
+# Nuevo rango = min0,max1
+
+# 5º: El próximo rango es superior al max actual:
+# min0 < max0 < min1 < max1
+# Estartegia:
+# Acercarnos a max0 en ronda0
+
+# 6º: El próximo rango es inferior al min actual:
+# min1 < max1 < min0 < max0
+# Estartegia:
+# Acercarnos a min0 en ronda 0

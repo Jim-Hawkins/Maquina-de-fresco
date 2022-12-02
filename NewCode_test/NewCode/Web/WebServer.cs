@@ -168,11 +168,12 @@ namespace NewCode.Web {
             Data.refresh = Int16.Parse(parameters[3].Split('=')[1]);
 
             // Param 4 => to round_time
-            if (!refreshRegex.Match(parameters[4]).Success)
+            /*if (!refreshRegex.Match(parameters[4]).Success)
             {
+                Console.WriteLine("tiempo de ronda: " + parameters[4]);
                 res[0] = "El formato de tiempo de ronda es ^time=([0-9]+,)*[0-9]+$";
                 return res;
-            }
+            }*/
             Data.round_time = parameters[4].Split('=')[1].Split(",");
 
             res[0] = "Los par&aacute;metros se han cambiado satisfactoriamente. Todo preparado.";
