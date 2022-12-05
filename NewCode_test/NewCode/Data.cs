@@ -30,8 +30,5 @@ namespace NewCode {
             Color.FromHex("#269926"),
             Color.FromHex("#008500")
         };
-
-        //RELAY VARIABLES
-        public static bool relayOn = true; // enfriando
     }
 }

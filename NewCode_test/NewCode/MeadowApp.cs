@@ -85,8 +85,8 @@ namespace NewCode {
                     }
                 }
 
-                relay[0] = new Meadow.Foundation.Relays.Relay(Device, Device.Pins.D04); // secador
-                relay[1] = new Meadow.Foundation.Relays.Relay(Device, Device.Pins.D05); // peltier
+                relay[0] = new Relay(Device, Device.Pins.D04); // secador
+                relay[1] = new Relay(Device, Device.Pins.D05); // peltier
 
                 Display();
 
@@ -109,7 +109,7 @@ namespace NewCode {
 
             //Value to control the time for heating and cooling
             //First iteration is 100 for the time spend creating timecontroller and thread
-            int sleep_time = 500;//20;
+            int sleep_time = (int) (Data.refresh * 0.5);//20;
 
             //Initialization of time controller
             //TimeController timeController = new TimeController();
@@ -228,16 +228,15 @@ namespace NewCode {
         //Round Timer
         private static void Timer() {
             Data.is_working = true;
-            Console.WriteLine("-----------------" + Data.round_time.Length);
             for (int i = 0; i < Data.round_time.Length; i++) {
-                Console.WriteLine("i= " + i + "; round_time= " + Data.round_time[i]);
+                Console.WriteLine("ronda = " + (i + 1) + "; round_time = " + Data.round_time[i]);
                 Data.time_left = int.Parse(Data.round_time[i]);
                 Data.current_round = i;
                 while (Data.time_left > 0) {
                     Data.time_left--;
                     Thread.Sleep(1000);
                 }
-                Console.WriteLine("fin de la ronda: " + i + "; Data.is_working= " + Data.is_working);
+                Console.WriteLine("Fin de la ronda: " + (i+1) + "; Data.is_working= " + Data.is_working);
 
             }
             Data.is_working = false;
