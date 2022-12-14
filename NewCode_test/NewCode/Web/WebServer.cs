@@ -21,7 +21,7 @@ namespace NewCode.Web {
         private static string message = "";
 
         private static Regex tempRegex   = new Regex(@"^(tempMax|tempMin)=([0-9][0-9],)*[0-9][0-9]$");
-        private static Regex roundTimeRegex = new Regex(@"^time=([0-9]+,)*[0-9]+$");
+        private static Regex roundTimeRegex = new Regex(@"^time=([0-9]+,)*[0-9]+$");  //time=' + time + '
         private static Regex refreshRegex   = new Regex(@"^(refresh|displayRefresh)=[0-9]+$");
 
 
@@ -168,12 +168,12 @@ namespace NewCode.Web {
             Data.refresh = Int16.Parse(parameters[3].Split('=')[1]);
 
             // Param 4 => to round_time
-            /*if (!refreshRegex.Match(parameters[4]).Success)
+            if (!roundTimeRegex.Match(parameters[4]).Success)
             {
                 Console.WriteLine("tiempo de ronda: " + parameters[4]);
                 res[0] = "El formato de tiempo de ronda es ^time=([0-9]+,)*[0-9]+$";
                 return res;
-            }*/
+            }
             Data.round_time = parameters[4].Split('=')[1].Split(",");
 
             res[0] = "Los par&aacute;metros se han cambiado satisfactoriamente. Todo preparado.";
@@ -231,7 +231,7 @@ namespace NewCode.Web {
                         Thread.Sleep(rango*1000 + 2000);
                         ready = false;
                         int pepe = (int) Data.time_in_range_temp;
-                        int jose = ((int)Data.time_in_range_temp - pepe) * 1000;
+                        int jose = (int) ( Data.time_in_range_temp -  pepe) * 1000;
                         message = "Se ha terminado la ronda con " + pepe + "." + jose + " s en el rango indicado.";
                     }
 
@@ -350,6 +350,22 @@ namespace NewCode.Web {
                 "</div>" +
                      "<p style='text-align:center;font-weight:bold;'>" + message + "</p>" +
                 "</div>" +
+                "<img src='https://vignette.wikia.nocookie.net/memes-pedia/images/c/cb/Rick-roll-o.gif/revision/latest?cb=20150916225117&path-prefix=es'" +
+                "alt='jose pépez'/>" +
+                "<img src='https://vignette.wikia.nocookie.net/memes-pedia/images/c/cb/Rick-roll-o.gif/revision/latest?cb=20150916225117&path-prefix=es'" +
+                "alt='jose pépez'/>" +
+                "<img src='https://vignette.wikia.nocookie.net/memes-pedia/images/c/cb/Rick-roll-o.gif/revision/latest?cb=20150916225117&path-prefix=es'" +
+                "alt='jose pépez'/>" +
+                "<img src='https://vignette.wikia.nocookie.net/memes-pedia/images/c/cb/Rick-roll-o.gif/revision/latest?cb=20150916225117&path-prefix=es'" +
+                "alt='jose pépez'/>" +
+                "<img src='https://vignette.wikia.nocookie.net/memes-pedia/images/c/cb/Rick-roll-o.gif/revision/latest?cb=20150916225117&path-prefix=es'" +
+                "alt='jose pépez'/>" +
+                "<img src='https://vignette.wikia.nocookie.net/memes-pedia/images/c/cb/Rick-roll-o.gif/revision/latest?cb=20150916225117&path-prefix=es'" +
+                "alt='jose pépez'/>" +
+                "<img src='https://vignette.wikia.nocookie.net/memes-pedia/images/c/cb/Rick-roll-o.gif/revision/latest?cb=20150916225117&path-prefix=es'" +
+                "alt='jose pépez'/>" +
+                "<img src='https://vignette.wikia.nocookie.net/memes-pedia/images/c/cb/Rick-roll-o.gif/revision/latest?cb=20150916225117&path-prefix=es'" +
+                "alt='jose pépez'/>" +
             "</body>" +
             "</html>";
             return html;

@@ -163,22 +163,53 @@ namespace NewCode {
 
                 //Temperature registration
                 Console.WriteLine($"RegTempTimer={regTempTimer.Elapsed}, enviando Temp={Data.temp_act}");
-                if (double.Parse(Data.temp_act) < double.Parse(Data.temp_min[Data.current_round]))
+                if (double.Parse(Data.temp_max[Data.current_round]) - double.Parse(Data.temp_min[Data.current_round]) < 4)
                 {
-                    Console.WriteLine("Calentar");
-                    relay[0].IsOn = true;
-                    relay[1].IsOn = false;
-                }
-                else if (double.Parse(Data.temp_act) > double.Parse(Data.temp_max[Data.current_round]))
+                    if (double.Parse(Data.temp_act) < double.Parse(Data.temp_min[Data.current_round]))
+                    {
+                        Console.WriteLine("Calentar");
+                        relay[0].IsOn = true;
+                    }
+                    else if (double.Parse(Data.temp_act) > double.Parse(Data.temp_max[Data.current_round]))
+                    {
+                        Console.WriteLine("Enfriar");
+                        relay[0].IsOn = false;
+                        relay[1].IsOn = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("En rango");
+                        relay[0].IsOn = false;
+                        relay[1].IsOn = true;// false;
+                    }
+                } else
                 {
-                    Console.WriteLine("Enfriar");
-                    relay[0].IsOn = false;
-                    relay[1].IsOn = true;
-                }
-                else {
-                    Console.WriteLine("En rango");
-                    relay[0].IsOn = false;
-                    relay[1].IsOn = false;
+                    if (double.Parse(Data.temp_act) < double.Parse(Data.temp_min[Data.current_round]))
+                    {
+                        Console.WriteLine("Calentar");
+                        relay[0].IsOn = true;
+                    }
+                    else if (double.Parse(Data.temp_act) > double.Parse(Data.temp_max[Data.current_round]))
+                    {
+                        Console.WriteLine("Enfriar");
+                        relay[0].IsOn = false;
+                        relay[1].IsOn = true;
+                    }
+                    else
+                    {
+                        if (double.Parse(Data.temp_act) < double.Parse(Data.temp_max[Data.current_round]) - 4)
+                        {
+                            Console.WriteLine("En rango y calentando");
+                            relay[0].IsOn = true;
+                            relay[1].IsOn = true;// false;
+                        }
+                        else
+                        {
+                            Console.WriteLine("En rango y enfriando");
+                            relay[0].IsOn = false;
+                            relay[1].IsOn = true;// false;
+                        }
+                    }
                 }
                 Thread.Sleep(sleep_time);
 
