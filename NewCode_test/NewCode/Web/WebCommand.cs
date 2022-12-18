@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NewCode.Web {
+﻿namespace NewCode.Web
+{
     /// <summary>
     /// Holds the definition of a web command that can be interpreted by the WebServer class.
     /// </summary>

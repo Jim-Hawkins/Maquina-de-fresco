@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NewCode.Web {
+﻿namespace NewCode.Web
+{
     /// <summary>
     /// Event arguments of an incoming web command.
     /// </summary>

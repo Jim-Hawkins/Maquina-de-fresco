@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using System.Diagnostics;
 using System.Threading;
 using System.Text.RegularExpressions;
 
-namespace NewCode.Web {
+namespace NewCode.Web
+{
     public class WebServer {
 
         private IPAddress _ip = null;
@@ -21,19 +20,13 @@ namespace NewCode.Web {
         private static string message = "";
 
         private static Regex tempRegex   = new Regex(@"^(tempMax|tempMin)=([0-9][0-9],)*[0-9][0-9]$");
-        private static Regex roundTimeRegex = new Regex(@"^time=([0-9]+,)*[0-9]+$");  //time=' + time + '
+        private static Regex roundTimeRegex = new Regex(@"^time=([0-9]+,)*[0-9]+$");
         private static Regex refreshRegex   = new Regex(@"^(refresh|displayRefresh)=[0-9]+$");
-
 
         /// <summary>
         /// Delegate for the CommandReceived event.
         /// </summary>
         public delegate void CommandReceivedHandler(object source, WebCommandEventArgs e);
-
-        /// <summary>
-        /// Delegate for the CommandReceived event.
-        /// </summary>
-        private double MathCeiling(double a) { return a + 1; }
 
         /// <summary>
         /// CommandReceived event is triggered when a valid command (plus parameters) is received.
@@ -57,15 +50,12 @@ namespace NewCode.Web {
             _port = port;
         }
 
-
         public async void Start() {
             if (listener == null) {
                 listener = new HttpListener();
                 listener.Prefixes.Add(Url);
             }
-
             listener.Start();
-
             Console.WriteLine($"The url of the webserver is {Url}");
 
             // Handle requests
@@ -75,10 +65,6 @@ namespace NewCode.Web {
             }
             // Close the listener
             listener.Close();
-        }
-
-        public async void Stop() {
-            _runServer = false;
         }
 
         private String[] HandleSetParams(string url)
@@ -92,7 +78,7 @@ namespace NewCode.Web {
                 return res;
             }
 
-            url = url.Substring(url.IndexOf("?")+1);
+            url = url[(url.IndexOf("?") + 1)..];
 
             if (!url.Contains("&"))
             {
@@ -130,7 +116,7 @@ namespace NewCode.Web {
                 return res;
             }
             string[] temp_max_parts = parameters[0].Split('=')[1].Split(",");
-            if (!tempCheck(temp_max_parts, false))
+            if (!TempCheck(temp_max_parts, false))
             {
                 res[0] = "La temperatura m&aacute;xima es 30 grados Celsius";
                 return res;
@@ -144,7 +130,7 @@ namespace NewCode.Web {
                 return res;
             }
             string[] temp_min_parts = parameters[1].Split('=')[1].Split(",");
-            if (!tempCheck(temp_min_parts, true))
+            if (!TempCheck(temp_min_parts, true))
             {
                 res[0] = "La temperatura m&iacute;nima es 12 grados Celsius";
                 return res;
@@ -152,17 +138,17 @@ namespace NewCode.Web {
             Data.temp_min = parameters[1].Split("=")[1].Split(",");
 
             // Param 2 => to display_refresh
-            if (!refreshRegex.Match(parameters[2]).Success)
+            if (!refreshRegex.Match(parameters[2]).Success || Int16.Parse(parameters[2].Split('=')[1]) <= 0)
             {
-                res[0] = "El formato de tiempo de refresco es ^displayRefresh=[0-9]+$";
+                res[0] = "El formato de tiempo de refresco es ^displayRefresh=[0-9]+$ y el valor debe ser mayor que cero";
                 return res;
             }
             Data.display_refresh = Int16.Parse(parameters[2].Split('=')[1]);
 
             // Param 3 => to refresh
-            if (!refreshRegex.Match(parameters[3]).Success)
+            if (!refreshRegex.Match(parameters[3]).Success || Int16.Parse(parameters[3].Split('=')[1]) <= 0)
             {
-                res[0] = "El formato de tiempo de refresco es ^refresh=[0-9]+$";
+                res[0] = "El formato de tiempo de refresco es ^refresh=[0-9]+$ y el valor debe ser mayor que cero";
                 return res;
             }
             Data.refresh = Int16.Parse(parameters[3].Split('=')[1]);
@@ -175,6 +161,12 @@ namespace NewCode.Web {
                 return res;
             }
             Data.round_time = parameters[4].Split('=')[1].Split(",");
+
+            if (Data.round_time.Length != Data.temp_max.Length || Data.round_time.Length != Data.temp_min.Length)
+            {
+                res[0] = "El número de rangos no coincide entre temperaturas máximas, mínimas y tiempos";
+                return res;
+            }
 
             res[0] = "Los par&aacute;metros se han cambiado satisfactoriamente. Todo preparado.";
             res[1] = "t";
@@ -202,20 +194,13 @@ namespace NewCode.Web {
                     Console.WriteLine(req.UserAgent);
                     Console.WriteLine();
 
-                    // If `shutdown` url requested w/ POST, then shutdown the server after serving the page
-                    if (req.HttpMethod == "POST" && req.Url.AbsolutePath == "/shutdown") {
-                        Console.WriteLine("Shutdown requested");
-                        _runServer = false;
-                    }
-
                     if (req.Url.AbsolutePath == "/setparams") {
-
                         //Get parameters
-                        string url = req.RawUrl;
-                        String[] result = HandleSetParams(url);
+                        String[] result = HandleSetParams(req.RawUrl);
                         message = result[0];
                         ready = Equals(result[1], "t");
                     }
+
                     if (req.Url.AbsolutePath == "/start") {
                         Console.WriteLine("empieza ronda");
                         int rango = 0;
@@ -230,14 +215,15 @@ namespace NewCode.Web {
                         // Wait for the round to finish
                         Thread.Sleep(rango*1000 + 2000);
                         ready = false;
-                        int pepe = (int) Data.time_in_range_temp;
-                        int jose = (int) ( Data.time_in_range_temp -  pepe) * 1000;
-                        message = "Se ha terminado la ronda con " + pepe + "." + jose + " s en el rango indicado.";
+                        message = $"Se ha terminado la ronda con {Data.time_in_range_temp} s en el rango indicado.";
                     }
 
                     // Write the response info
-                    string disableSubmit = !_runServer ? "disabled" : "";
-                    byte[] data = Encoding.UTF8.GetBytes(string.Format(writeHTML(message), pageViews, disableSubmit));
+                    string disableSubmit = _runServer ? "" : "disabled";
+                    /************************************************/
+                    //byte[] data = Encoding.UTF8.GetBytes(string.Format(WriteHTML(message), pageViews, disableSubmit));
+                    byte[] data = Encoding.UTF8.GetBytes(WriteHTML(message));
+                    /************************************************/
                     resp.ContentType = "text/html";
                     resp.ContentEncoding = Encoding.UTF8;
                     resp.ContentLength64 = data.LongLength;
@@ -250,7 +236,7 @@ namespace NewCode.Web {
         }
 
 
-        public static string mostarDatos(string[] data) {
+        public static string MostarDatos(string[] data) {
             if (data == null)
                 return "";
             
@@ -263,7 +249,7 @@ namespace NewCode.Web {
             return datos;
         }
 
-        public static bool tempCheck(string[] data, bool tipo) {
+        public static bool TempCheck(string[] data, bool tipo) {
             if (data == null)
                 return true;
 
@@ -282,7 +268,7 @@ namespace NewCode.Web {
             return true;
         }
 
-        public static string writeHTML(string message) {
+        public static string WriteHTML(string message) {
             // If we are already ready, disable all the inputs
             string disabled = "";
             string start = "";
@@ -298,56 +284,57 @@ namespace NewCode.Web {
                 disabled = "disabled";
                 start = "<button type=\"button\" onclick='start()'>Comenzar Ronda</button>";
             }
-
             if (Data.is_working)
                 start = "";
 
             //Write the HTML page
-            string html = "<!DOCTYPE html>" +
+            return 
+            "<!DOCTYPE html>" +
             "<html>" +
             "<head>" +
                 "<meta charset='utf - 8'>" +
                 "<meta http - equiv = 'X-UA-Compatible' content = 'IE=edge'>" +
                 "<meta name = 'viewport' content = 'width=device-width, initial-scale=1' > " +
-                "<title>Netduino Plus 2 Controller</title>" +
+                "<title>Meadow Controller</title>" +
                 "<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700'>" +
-                "<link rel = 'stylesheet' href = 'http://127.0.0.1:8887/css/bootstrap.min.css'>" +
-                "<link rel = 'stylesheet' href = 'http://127.0.0.1:8887/css/tooplate-style.css' >" +
-                "<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.js'> </script>" +
+                //"<link rel = 'stylesheet' href = 'http://127.0.0.1:8887/css/bootstrap.min.css'>" +
+                //"<link rel = 'stylesheet' href = 'http://127.0.0.1:8887/css/tooplate-style.css' >" +
+                //"<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.js'> </script>" +
             "</head>" +
             "<body style=\"background-image: linear-gradient(#006, #777); height: 100vh; color: wheat;\">" +
                 "<script> function save(){{" +
-                "console.log(\"SAVE!!\");" +
-                "var tempMax = document.forms['params']['tempMax'].value;" +
-                "var tempMin = document.forms['params']['tempMin'].value;" +
-                "var displayRefresh = document.forms['params']['displayRefresh'].value;" +
-                "var refresh = document.forms['params']['refresh'].value;" +
-                "var time = document.forms['params']['time'].value;" +
-                "location.href = 'setparams?tempMax=' + tempMax + '&tempMin=' + tempMin + '&displayRefresh=' + displayRefresh + '&refresh=' + refresh + '&time=' + time + '&pass=pass';" +
-                "}} " +
+                    "console.log(\"SAVE!!\");" +
+                    "var time = document.forms['params']['time'].value;" +
+                    "var tempMax = document.forms['params']['tempMax'].value;" +
+                    "var tempMin = document.forms['params']['tempMin'].value;" +
+                    "var refresh = document.forms['params']['refresh'].value;" +
+                    "var displayRefresh = document.forms['params']['displayRefresh'].value;" +
+                    "location.href = 'setparams?tempMax=' + tempMax + '&tempMin=' + tempMin + '&displayRefresh=' + displayRefresh + '&refresh=' + refresh + '&time=' + time + '&pass=pass';" +
+                    "}} " +
                 "function start(){{location.href = 'start'}}" +
                 "</script>" +
-                "<div class='col-xs-12 ml-auto mr-auto ie-container-width-fix'>" +
-                    "<form name='params' method = 'get' class='tm-search-form tm-section-pad-2' style=\"display: flex; justify-content: center; align-items: center; flex-direction: column; \">" +
-                        "<div class='form-group tm-form-element tm-form-element-100'>" +
-                            "<p>Temperatura Max <b>(&deg;C)</b> <input name='tempMax' type='text' class='form-control' value='" + mostarDatos(Data.temp_max) + "' " + disabled + "></input></p>" +
+                "<div>" +
+                    "<form name='params' method='get' style=\"display: flex; justify-content: center; align-items: center; flex-direction: column; \">" +
+                        "<div>" +
+                            "<p>Temperatura Max <b>(&deg;C)</b><input name='tempMax' type='text' value='" + MostarDatos(Data.temp_max) + "' " + disabled + "></input></p>" +
                         "</div>" +
-                        "<div class='form-group tm-form-element tm-form-element-50'>" +
-                            "<p>Temperatura Min <b>(&deg;C)</b> <input name='tempMin' type='text' class='form-control' value='" + mostarDatos(Data.temp_min) + "' " + disabled + "></input></p>" +
+                        "<div>" +
+                            "<p>Temperatura Min <b>(&deg;C)</b><input name='tempMin' type='text' value='" + MostarDatos(Data.temp_min) + "' " + disabled + "></input></p>" +
                         "</div>" +
-                        "<div class='form-group tm-form-element tm-form-element-50'>" +
-                            "<p>Duraci&oacute;n Ronda <b>(s)</b> <input name='time' type='text' class='form-control' value='" + mostarDatos(Data.round_time) + "' " + disabled + "></input></p>" +
+                        "<div>" +
+                            "<p>Duraci&oacute;n Ronda <b>(s)</b><input name='time' type='text' value='" + MostarDatos(Data.round_time) + "' " + disabled + "></input></p>" +
                         "</div>" +
-                        "<div class='form-group tm-form-element tm-form-element-100'>" +
-                            "<p>Cadencia Refresco <b>(ms)</b> <input name='displayRefresh' type='number' class='form-control' value='" + Data.display_refresh + "' " + disabled + "></input></p>" +
+                        "<div>" +
+                            "<p>Cadencia Refresco <b>(ms)</b><input name='displayRefresh' type='number' value='" + Data.display_refresh + "' " + disabled + "></input></p>" +
                         "</div>" +
-                        "<div class='form-group tm-form-element tm-form-element-50'>" +
-                            "<p>Cadencia Interna <b>(ms)</b> <input name='refresh' type='number' class='form-control' value='" + Data.refresh + "' " + disabled + "></input></p>" +
+                        "<div>" +
+                            "<p>Cadencia Interna <b>(ms)</b><input name='refresh' type='number' value='" + Data.refresh + "' " + disabled + "></input></p>" +
                         "</div>" +
                     "</form>" +
-                "<div class='form-group tm-form-element tm-form-element-50'>" +
-                     save + start +
-                "</div>" +
+                    "<div style=\"display: flex; justify-content: center; align-items: center; flex-direction: column; \">" +
+                        save +
+                        start +
+                    "</div>" +
                      "<p style='text-align:center;font-weight:bold;'>" + message + "</p>" +
                 "</div>" +
                 "<img src='https://vignette.wikia.nocookie.net/memes-pedia/images/c/cb/Rick-roll-o.gif/revision/latest?cb=20150916225117&path-prefix=es'" +
@@ -368,8 +355,6 @@ namespace NewCode.Web {
                 "alt='jose pépez'/>" +
             "</body>" +
             "</html>";
-            return html;
         }
-
     }
 }
