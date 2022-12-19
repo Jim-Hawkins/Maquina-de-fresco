@@ -154,66 +154,88 @@ namespace NewCode
 
             while (Data.is_working)
             {
-                Console.WriteLine("regTempTimer.Elapsed " + regTempTimer.Elapsed);
                 Console.WriteLine("Data.temp_act " + Data.temp_act);
                 Console.WriteLine("Data.current_round " + Data.current_round);
 
-                Thread.Sleep(Data.refresh - sleep_time);
+                //Thread.Sleep(Data.refresh - sleep_time);
+
+
+                if (double.Parse(Data.temp_act) < double.Parse(Data.temp_min[Data.current_round]))
+                {
+                    if ((double.Parse(Data.temp_min[Data.current_round]) - double.Parse(Data.temp_act)) > 8)
+                    {
+                        Console.WriteLine("Calentado Potente");
+                        relay[0].IsOn = true;
+                        relay[1].IsOn = false;
+                        Thread.Sleep(Data.refresh);
+                    }
+
+                    else if ((double.Parse(Data.temp_min[Data.current_round]) - double.Parse(Data.temp_act)) > 5)
+                    {
+                        Console.WriteLine("Calentado Medio");
+                        relay[0].IsOn = true;
+                        relay[1].IsOn = false;
+                        Thread.Sleep((int)(Data.refresh * 0.7));
+                        relay[0].IsOn = false;
+                        relay[1].IsOn = false;
+                        Thread.Sleep((int)(Data.refresh * 0.3));
+                    }
+
+                    else
+                    {
+                        Console.WriteLine("Calentado Suave");
+                        relay[0].IsOn = true;
+                        relay[1].IsOn = false;
+                        Thread.Sleep((int)(Data.refresh * 0.5));
+                        relay[0].IsOn = false;
+                        relay[1].IsOn = false;
+                        Thread.Sleep((int)(Data.refresh * 0.5));
+                    }
+
+                }
+                else if (double.Parse(Data.temp_act) > double.Parse(Data.temp_max[Data.current_round]))
+                {
+
+                    if ((double.Parse(Data.temp_act) - double.Parse(Data.temp_max[Data.current_round])) > 8)
+                    {
+                        Console.WriteLine("Enfriado Potente");
+                        relay[0].IsOn = false;
+                        relay[1].IsOn = true;
+                        Thread.Sleep((int)(Data.refresh * 0.25));
+                        relay[0].IsOn = false;
+                        relay[1].IsOn = false;
+                        Thread.Sleep((int)(Data.refresh * 0.25));
+                        relay[0].IsOn = false;
+                        relay[1].IsOn = true;
+                        Thread.Sleep((int)(Data.refresh * 0.25));
+                        relay[0].IsOn = false;
+                        relay[1].IsOn = false;
+                        Thread.Sleep((int)(Data.refresh * 0.25));
+                    }
+
+                    else
+                    {
+                        Console.WriteLine("Enfriado Suave");
+                        relay[0].IsOn = false;
+                        relay[1].IsOn = true;
+                        Thread.Sleep((int)(Data.refresh * 0.5));
+                        relay[0].IsOn = false;
+                        relay[1].IsOn = false;
+                        Thread.Sleep((int)(Data.refresh * 0.5));
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("En rango");
+                    relay[0].IsOn = false;
+                    relay[1].IsOn = false;
+                    Thread.Sleep(Data.refresh);
+           
+                }
 
                 //Temperature registration
                 //Console.WriteLine($"RegTempTimer={regTempTimer.Elapsed}, enviando Temp={Data.temp_act}");
-                if (double.Parse(Data.temp_max[Data.current_round]) - double.Parse(Data.temp_min[Data.current_round]) < 4)
-                {
-                    if (double.Parse(Data.temp_act) < double.Parse(Data.temp_min[Data.current_round]))
-                    {
-                        Console.WriteLine("Calentar");
-                        relay[0].IsOn = true;
-                    }
-                    else if (double.Parse(Data.temp_act) > double.Parse(Data.temp_max[Data.current_round]))
-                    {
-                        Console.WriteLine("Enfriar");
-                        relay[0].IsOn = false;
-                        relay[1].IsOn = true;
-                    }
-                    else
-                    {
-                        Console.WriteLine("En rango");
-                        relay[0].IsOn = false;
-                        relay[1].IsOn = true;
-                    }
-                } else
-                {
-                    if (double.Parse(Data.temp_act) < double.Parse(Data.temp_min[Data.current_round]))
-                    {
-                        Console.WriteLine("Calentar");
-                        relay[0].IsOn = true;
-                    }
-                    else if (double.Parse(Data.temp_act) > double.Parse(Data.temp_max[Data.current_round]))
-                    {
-                        Console.WriteLine("Enfriar");
-                        relay[0].IsOn = false;
-                        relay[1].IsOn = true;
-                    }
-                    else
-                    {
-                        if (double.Parse(Data.temp_act) < double.Parse(Data.temp_max[Data.current_round]) - 4)
-                        {
-                            Console.WriteLine("En rango y calentando");
-                            relay[0].IsOn = true;
-                            relay[1].IsOn = true;
-                        }
-                        else
-                        {
-                            Console.WriteLine("En rango y enfriando");
-                            relay[0].IsOn = false;
-                            relay[1].IsOn = true;
-                        }
-                    }
-                }
-                Thread.Sleep(sleep_time);
 
-                relay[0].IsOn = false;
-                relay[1].IsOn = false;
                 Console.WriteLine("registrar temp...");
                 /******************************/
                 /*if (double.Parse(Data.temp_act) <= double.Parse(Data.temp_max[Data.current_round])
@@ -222,15 +244,20 @@ namespace NewCode
                     timeInRange++;
                     Console.WriteLine("time in range: " + timeInRange);
                 }*/
-                try {
+                try
+                {
                     timeController.RegisterTemperature(double.Parse(Data.temp_act));
-                } catch {
+                }
+                catch
+                {
                     Console.WriteLine("null error");
                 }
                 /******************************/
                 //Console.WriteLine("reiniciar crono");
                 regTempTimer.Restart();
+
             }
+
             Console.WriteLine("Round Finish");
 
             relay[0].IsOn = false;
@@ -252,7 +279,7 @@ namespace NewCode
             Data.time_in_range_temp = timeController.TimeInRangeInMilliseconds / 1000;
 
             Console.WriteLine("Tiempo dentro del rango " + (double) timeController.TimeInRangeInMilliseconds / 1000 + " s de " + total_time + " s");
-            Console.WriteLine("Tiempo fuera del rango " + (double) total_time_out_of_range / 1000 + " s de " + total_time + " s");
+            Console.WriteLine("Tiempo fuera del rango " + (double)timeController.TimeOutOfRangeInMilliseconds / 1000 + " s de " + total_time + " s");
             /******************************/
         }
 
